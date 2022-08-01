@@ -2,6 +2,7 @@ package br.com.mallah.challengealura.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -9,6 +10,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +47,15 @@ public class ReceitaController {
 			.map(r -> new ReceitaResponseDTO(r))
 			.collect(Collectors.toList());
 		return ResponseEntity.ok(resposta);
+	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<ReceitaResponseDTO> detalhar(@PathVariable Long id) {
+		Optional<Receita> receitaOptional = receitaRepository.findById(id);
+		if (receitaOptional.isPresent()) {
+			return ResponseEntity.ok(new ReceitaResponseDTO(receitaOptional.get()));
+		}
+		return ResponseEntity.notFound().build();
 	}
 	
 	private boolean jaExisteReceitaComMesmaDescricaoMesEAno(Receita receita) {
