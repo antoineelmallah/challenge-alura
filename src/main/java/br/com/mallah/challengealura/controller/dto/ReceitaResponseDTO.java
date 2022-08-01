@@ -1,7 +1,8 @@
 package br.com.mallah.challengealura.controller.dto;
 
+import static br.com.mallah.challengealura.utils.ConvercaoUtils.dateToString;
+
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import br.com.mallah.challengealura.model.Receita;
 
@@ -11,12 +12,12 @@ public class ReceitaResponseDTO {
 	
 	private BigDecimal valor;
 	
-	private LocalDate data;
+	private String data;
 	
 	public ReceitaResponseDTO(Receita receita) {
 		this.descricao = receita.getDescricao();
 		this.valor = receita.getValor();
-		this.data = receita.getData();
+		this.data = dateToString(receita.getData());
 	}
 
 	public String getDescricao() {
@@ -27,7 +28,7 @@ public class ReceitaResponseDTO {
 		return valor;
 	}
 
-	public LocalDate getData() {
+	public String getData() {
 		return data;
 	}
 	

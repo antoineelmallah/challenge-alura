@@ -11,4 +11,7 @@ public class ConvercaoUtils {
 		return LocalDate.parse(date, formatter);
 	}
 	
+	public static String dateToString(LocalDate date) {
+		return formatter.format(date);
+	}
 }
