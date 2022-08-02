@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.mallah.challengealura.controller.dto.ReceitaRequestDTO;
 import br.com.mallah.challengealura.controller.dto.ReceitaResponseDTO;
@@ -31,7 +32,7 @@ public class ReceitaController {
 	private ReceitaRepository receitaRepository;
 
 	@PostMapping
-	public ResponseEntity<String> salvar(@RequestBody @Valid ReceitaRequestDTO request) {
+	public ResponseEntity<String> salvar(@RequestBody @Valid ReceitaRequestDTO request, UriComponentsBuilder uriBuilder) {
 		Receita entity = request.atualizar(new Receita());
 		
 		if (jaExisteReceitaComMesmaDescricaoMesEAno(entity)) {
@@ -39,8 +40,9 @@ public class ReceitaController {
 		}
 		
 		Receita receita = receitaRepository.save(entity);
+		URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(receita.getId()).toUri();
 		
-		return ResponseEntity.created(URI.create("/receitas/" + receita.getId())).build();
+		return ResponseEntity.created(uri).build();
 	}
 	
 	@GetMapping
