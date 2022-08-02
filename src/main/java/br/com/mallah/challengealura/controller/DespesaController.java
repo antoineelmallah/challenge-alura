@@ -2,11 +2,14 @@ package br.com.mallah.challengealura.controller;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.mallah.challengealura.controller.dto.DespesaRequestDTO;
+import br.com.mallah.challengealura.controller.dto.DespesaResponseDTO;
 import br.com.mallah.challengealura.model.Despesa;
 import br.com.mallah.challengealura.repository.DespesaRepository;
 
@@ -36,6 +40,14 @@ public class DespesaController {
 		URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(despesa.getId()).toUri();
 		
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@GetMapping
+	public ResponseEntity<List<DespesaResponseDTO>> recuperarTodas() {
+		List<DespesaResponseDTO> list = despesaRepository.findAll().stream()
+			.map(d -> new DespesaResponseDTO(d))
+			.collect(Collectors.toList());
+		return ResponseEntity.ok(list);
 	}
 	
 	private boolean jaExisteDespesaComMesmaDescricaoMesEAno(Despesa despesa) {
