@@ -34,8 +34,7 @@ public class ReceitaRequestDTO {
 		return data;
 	}
 	
-	public Receita toEntity() {
-		Receita receita = new Receita();
+	public Receita atualizar(Receita receita) {
 		receita.setDescricao(descricao);
 		receita.setValor(valor);
 		receita.setData(stringToDate(data));
