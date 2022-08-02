@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,10 +62,33 @@ public class DespesaController {
 		return ResponseEntity.notFound().build();
 	}
 
-	
+	@PutMapping("/{id}")
+	public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody @Valid DespesaRequestDTO request) {
+		
+		if (alteracaoDeixaraDuasDespesasComMesmaDescricaoMesEAno(id, request)) {
+			return ResponseEntity.badRequest().body("Alteração deixaria mais de uma despesa com a mesma descrição no mesmo mês e ano.");
+		}
+		
+		Optional<Despesa> despesaOptional = despesaRepository.findById(id);
+		if (despesaOptional.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		Despesa despesa = despesaOptional.get();
+		request.atualizar(despesa);
+		despesaRepository.save(despesa);
+		return ResponseEntity.ok("Despesa alterada.");
+	}
+
 	private boolean jaExisteDespesaComMesmaDescricaoMesEAno(Despesa despesa) {
 		LocalDate data = despesa.getData();
 		return despesaRepository.contarDespesasPorDescricaoEMes(despesa.getDescricao(), data.getMonthValue(), data.getYear()) > 0;
+	}
+
+	private boolean alteracaoDeixaraDuasDespesasComMesmaDescricaoMesEAno(Long id, DespesaRequestDTO request) {
+		Despesa despesa = request.atualizar(new Despesa());
+		LocalDate data = despesa.getData();
+		return despesaRepository.contarDespesasPorDescricaoEMesComIdDiferente(id, despesa.getDescricao(), data.getMonthValue(), data.getYear()) > 0;
 	}
 
 }
