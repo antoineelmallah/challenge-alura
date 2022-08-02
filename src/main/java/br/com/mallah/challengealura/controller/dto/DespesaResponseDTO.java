@@ -5,7 +5,6 @@ import static br.com.mallah.challengealura.utils.ConvercaoUtils.dateToString;
 import java.math.BigDecimal;
 
 import br.com.mallah.challengealura.model.Despesa;
-import br.com.mallah.challengealura.model.Receita;
 
 public class DespesaResponseDTO {
 

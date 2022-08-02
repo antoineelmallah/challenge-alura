@@ -11,6 +11,6 @@ public interface DespesaRepository extends JpaRepository<Despesa, Long> {
 	Long contarDespesasPorDescricaoEMes(String descricao, int mes, int ano);
 
 	@Query("select count(c) from Despesa c where lower(c.descricao) = lower(:descricao) and month(c.data) = :mes and year(c.data) = :ano and c.id != :id")
-	Long contarDespesasPorDescricaoEMesComIdDiferente(Long id, String descricao, int monthValue, int year);
+	Long contarDespesasPorDescricaoEMesComIdDiferente(Long id, String descricao, int mes, int ano);
 
 }

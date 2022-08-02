@@ -37,7 +37,7 @@ public class DespesaController {
 		Despesa entity = request.atualizar(new Despesa());
 		
 		if (jaExisteDespesaComMesmaDescricaoMesEAno(entity)) {
-			return ResponseEntity.badRequest().body("Já existe receita com a mesma descrição no mesmo mês e ano.");
+			return ResponseEntity.badRequest().body("Já existe despesa com a mesma descrição no mesmo mês e ano.");
 		}
 		
 		Despesa despesa = despesaRepository.save(entity);
