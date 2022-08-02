@@ -83,6 +83,10 @@ public class ReceitaController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> remover(@PathVariable Long id) {
+		Optional<Receita> receitaOptional = receitaRepository.findById(id);
+		if (receitaOptional.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
 		receitaRepository.deleteById(id);
 		return ResponseEntity.ok("Receita excluida");
 	}
