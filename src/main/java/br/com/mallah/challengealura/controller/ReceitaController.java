@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,19 +65,37 @@ public class ReceitaController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<String> atualizar(@PathVariable Long id, @RequestBody @Valid ReceitaRequestDTO request) {
+		
+		if (alteracaoDeixaraDuasReceitasComMesmaDescricaoMesEAno(id, request)) {
+			return ResponseEntity.badRequest().body("Alteração deixaria mais de uma receita com a mesma descrição no mesmo mês e ano.");
+		}
+		
 		Optional<Receita> receitaOptional = receitaRepository.findById(id);
 		if (receitaOptional.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
+
 		Receita receita = receitaOptional.get();
 		request.atualizar(receita);
 		receitaRepository.save(receita);
 		return ResponseEntity.ok("Receita alterada.");
 	}
 	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> remover(@PathVariable Long id) {
+		receitaRepository.deleteById(id);
+		return ResponseEntity.ok("Receita excluida");
+	}
+	
 	private boolean jaExisteReceitaComMesmaDescricaoMesEAno(Receita receita) {
 		LocalDate data = receita.getData();
 		return receitaRepository.contarReceitasPorDescricaoEMes(receita.getDescricao(), data.getMonthValue(), data.getYear()) > 0;
 	}
-	
+
+	private boolean alteracaoDeixaraDuasReceitasComMesmaDescricaoMesEAno(Long id, ReceitaRequestDTO request) {
+		Receita receita = request.atualizar(new Receita());
+		LocalDate data = receita.getData();
+		return receitaRepository.contarReceitasPorDescricaoEMesComIdDiferente(id, receita.getDescricao(), data.getMonthValue(), data.getYear()) > 0;
+	}
+
 }
