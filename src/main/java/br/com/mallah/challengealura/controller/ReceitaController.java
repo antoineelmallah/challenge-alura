@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -47,8 +49,9 @@ public class ReceitaController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<ReceitaResponseDTO>> recuperarTodas() {
-		List<ReceitaResponseDTO> resposta = receitaRepository.findAll().stream()
+	public ResponseEntity<List<ReceitaResponseDTO>> recuperarTodas(@RequestParam(required = false) String descricao) {
+		System.out.println("descricao: "+descricao);
+		List<ReceitaResponseDTO> resposta = (Strings.isBlank(descricao) ? receitaRepository.findAll() : receitaRepository.findByDescricaoContaining(descricao)).stream()
 			.map(r -> new ReceitaResponseDTO(r))
 			.collect(Collectors.toList());
 		return ResponseEntity.ok(resposta);
