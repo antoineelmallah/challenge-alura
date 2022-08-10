@@ -4,6 +4,7 @@ import static br.com.mallah.challengealura.utils.ConvercaoUtils.dateToString;
 
 import java.math.BigDecimal;
 
+import br.com.mallah.challengealura.model.Categoria;
 import br.com.mallah.challengealura.model.Despesa;
 
 public class DespesaResponseDTO {
@@ -14,10 +15,13 @@ public class DespesaResponseDTO {
 	
 	private String data;
 	
+	private Categoria categoria;
+	
 	public DespesaResponseDTO(Despesa despesa) {
 		this.descricao = despesa.getDescricao();
 		this.valor = despesa.getValor();
 		this.data = dateToString(despesa.getData());
+		this.categoria = despesa.getCategoria();
 	}
 
 	public String getDescricao() {
@@ -30,6 +34,10 @@ public class DespesaResponseDTO {
 
 	public String getData() {
 		return data;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
 	}
 	
 }

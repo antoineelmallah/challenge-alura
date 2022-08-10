@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import br.com.mallah.challengealura.model.Categoria;
 import br.com.mallah.challengealura.model.Despesa;
 
 public class DespesaRequestDTO {
@@ -21,6 +22,8 @@ public class DespesaRequestDTO {
 	@NotBlank
 	@Pattern(regexp = "\\d{2}/\\d{2}/\\d{4}")
 	private String data;
+	
+	private Categoria categoria;
 
 	public String getDescricao() {
 		return descricao;
@@ -34,7 +37,15 @@ public class DespesaRequestDTO {
 		return data;
 	}
 	
-	public Despesa atualizar(Despesa despesa) {
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public Despesa criarEntidade() {
+		return Despesa.novaInstancia(descricao, stringToDate(data), categoria);
+	}
+	
+	public Despesa atualizarEntidade(Despesa despesa) {
 		despesa.setDescricao(descricao);
 		despesa.setValor(valor);
 		despesa.setData(stringToDate(data));

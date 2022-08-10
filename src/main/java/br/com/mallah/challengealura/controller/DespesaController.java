@@ -34,7 +34,7 @@ public class DespesaController {
 	
 	@PostMapping
 	public ResponseEntity<String> salvar(@RequestBody @Valid DespesaRequestDTO request, UriComponentsBuilder uriBuilder) {
-		Despesa entity = request.atualizar(new Despesa());
+		Despesa entity = request.criarEntidade();
 		
 		if (jaExisteDespesaComMesmaDescricaoMesEAno(entity)) {
 			return ResponseEntity.badRequest().body("Já existe despesa com a mesma descrição no mesmo mês e ano.");
@@ -76,7 +76,7 @@ public class DespesaController {
 		}
 
 		Despesa despesa = despesaOptional.get();
-		request.atualizar(despesa);
+		request.atualizarEntidade(despesa);
 		despesaRepository.save(despesa);
 		return ResponseEntity.ok("Despesa alterada.");
 	}
@@ -97,7 +97,7 @@ public class DespesaController {
 	}
 
 	private boolean alteracaoDeixaraDuasDespesasComMesmaDescricaoMesEAno(Long id, DespesaRequestDTO request) {
-		Despesa despesa = request.atualizar(new Despesa());
+		Despesa despesa = request.criarEntidade();
 		LocalDate data = despesa.getData();
 		return despesaRepository.contarDespesasPorDescricaoEMesComIdDiferente(id, despesa.getDescricao(), data.getMonthValue(), data.getYear()) > 0;
 	}

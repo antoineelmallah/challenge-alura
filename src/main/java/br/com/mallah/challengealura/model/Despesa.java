@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +24,11 @@ public class Despesa {
 	private BigDecimal valor;
 	
 	private LocalDate data;
+	
+	@Enumerated(EnumType.STRING)
+	private Categoria categoria;
+	
+	protected Despesa() {}
 
 	public String getDescricao() {
 		return descricao;
@@ -49,6 +56,18 @@ public class Despesa {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public static Despesa novaInstancia(String descricao, LocalDate data, Categoria categoria) {
+		Despesa despesa = new Despesa();
+		despesa.descricao = descricao;
+		despesa.data = data;
+		despesa.categoria = categoria != null ? categoria : Categoria.OUTRAS;
+		return despesa;
 	}
 	
 }
