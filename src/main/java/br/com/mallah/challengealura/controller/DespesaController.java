@@ -24,7 +24,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.mallah.challengealura.controller.dto.DespesaRequestDTO;
 import br.com.mallah.challengealura.controller.dto.DespesaResponseDTO;
-import br.com.mallah.challengealura.controller.dto.ReceitaResponseDTO;
 import br.com.mallah.challengealura.model.Despesa;
 import br.com.mallah.challengealura.repository.DespesaRepository;
 
@@ -57,6 +56,18 @@ public class DespesaController {
 		return ResponseEntity.ok(list);
 	}
 	
+	@GetMapping("/{ano}/{mes}")
+	public ResponseEntity<List<DespesaResponseDTO>> recuperarDespesasDoMes(@PathVariable Integer ano, @PathVariable Integer mes) {
+		if (ano == null || mes == null) 
+			return ResponseEntity.badRequest().build();
+		if (mes < 1 || mes > 12)
+			return ResponseEntity.badRequest().build();
+		List<DespesaResponseDTO> result = despesaRepository.findByAnoEMes(ano, mes).stream()
+				.map(DespesaResponseDTO::new)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(result);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<DespesaResponseDTO> detalhar(@PathVariable Long id) {
 		Optional<Despesa> despesaOptional = despesaRepository.findById(id);

@@ -17,4 +17,7 @@ public interface DespesaRepository extends JpaRepository<Despesa, Long> {
 
 	List<Despesa> findByDescricaoContaining(String descricao);
 
+	@Query("select c from Despesa c where month(c.data) = :mes and year(c.data) = :ano")
+	List<Despesa> findByAnoEMes(Integer ano, Integer mes);
+
 }
