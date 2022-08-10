@@ -50,7 +50,6 @@ public class ReceitaController {
 	
 	@GetMapping
 	public ResponseEntity<List<ReceitaResponseDTO>> recuperarTodas(@RequestParam(required = false) String descricao) {
-		System.out.println("descricao: "+descricao);
 		List<ReceitaResponseDTO> resposta = (Strings.isBlank(descricao) ? receitaRepository.findAll() : receitaRepository.findByDescricaoContaining(descricao)).stream()
 			.map(r -> new ReceitaResponseDTO(r))
 			.collect(Collectors.toList());
