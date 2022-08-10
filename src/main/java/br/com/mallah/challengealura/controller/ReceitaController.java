@@ -56,6 +56,18 @@ public class ReceitaController {
 		return ResponseEntity.ok(resposta);
 	}
 	
+	@GetMapping("/{ano}/{mes}")
+	public ResponseEntity<List<ReceitaResponseDTO>> recuperarReceitasDoMes(@PathVariable Integer ano, @PathVariable Integer mes) {
+		if (ano == null || mes == null) 
+			return ResponseEntity.badRequest().build();
+		if (mes < 1 || mes > 12)
+			return ResponseEntity.badRequest().build();
+		List<ReceitaResponseDTO> result = receitaRepository.findByAnoEMes(ano, mes).stream()
+				.map(ReceitaResponseDTO::new)
+				.collect(Collectors.toList());
+		return ResponseEntity.ok(result);
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<ReceitaResponseDTO> detalhar(@PathVariable Long id) {
 		Optional<Receita> receitaOptional = receitaRepository.findById(id);
