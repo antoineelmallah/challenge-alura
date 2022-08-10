@@ -1,5 +1,6 @@
 package br.com.mallah.challengealura.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,5 +20,8 @@ public interface ReceitaRepository extends JpaRepository<Receita, Long> {
 
 	@Query("select c from Receita c where month(c.data) = :mes and year(c.data) = :ano")
 	List<Receita> findByAnoEMes(Integer ano, Integer mes);
+
+	@Query("select sum(c.valor) from Receita c where month(c.data) = :mes and year(c.data) = :ano")
+	BigDecimal sumValorByAnoEMes(Integer ano, Integer mes);
 
 }
