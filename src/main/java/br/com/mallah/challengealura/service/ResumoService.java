@@ -24,7 +24,13 @@ public class ResumoService {
 		
 		BigDecimal totalReceitas = receitaRepository.sumValorByAnoEMes(ano, mes);
 		
+		if (totalReceitas == null)
+			totalReceitas = BigDecimal.ZERO;
+		
 		BigDecimal totalDespesas = despesaRepository.sumValorByAnoEMes(ano, mes);
+		
+		if (totalDespesas == null)
+			totalDespesas = BigDecimal.ZERO;
 		
 		ResumoResponseDTO result = ResumoResponseDTO.novaInstancia(ano, mes, totalDespesas, totalReceitas);
 		
